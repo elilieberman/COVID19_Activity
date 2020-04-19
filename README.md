@@ -1,5 +1,5 @@
 # COVID19_Activity
-1. Python Script with visuals for live Tracking COVID19 confirmed, recovered and mortality stats.  <br /> 
+1. Python Python 3.7.6 Script, with visuals for live Tracking COVID19 confirmed, recovered and mortality stats.  <br /> 
 2. Using the URL's from the three HUMDATA.org files, updated CONFIRMED, RECOVERED and DEATH case data are merged into a daily activity report. <br /> 
 3. The HUMDATA is deduped and aggregated "per day" for proper time series frequency/spacing. <br /> 
 4. The WORLDBANK URL provides country population data, to give context to the raw COVID case data, i.e. what the numbers mean as a percentage of the respective country population. <br /> 
