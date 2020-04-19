@@ -1,6 +1,6 @@
 # COVID19_Activity
 1. Python Script with visuals for live Tracking COVID19 confirmed, recovered and mortality stats.  <br /> 
-2. Using the URL's from the three HUMDATA.org files, complete Confirmed, Recvered and Death stats are provided after merging the live data. <br /> <br /> 
+2. Using the URL's from the three HUMDATA.org files, complete Confirmed, Recovered and Death stats are provided after merging the live data. <br /> 
 The HUMDATA is deduped and aggregated "per day" for proper time series frequency/spacing. <br /> 
 3. The WORLDBANK URL provides country population data, to give context to the raw COVID case data, i.e. what the numbers mean as a percentage of the respective country population. <br /> 
 4. The 5 day rolling mean, is provided for the Country Trend visual (dual axis of actual v. rolling mean) <br /> 
