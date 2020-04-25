@@ -7,4 +7,5 @@
 6. The 5 day rolling mean, is provided for the "COVID Activity and Trend" visual (dual axis of actual v. rolling mean).<br /> 
 7. To modify the graphs for another Country update the variable "country_selected" (line 96) <br /> 
 8. The agg_data csv is the sourcefile for related PowerBI dashboard, check it out...
-https://app.powerbi.com/groups/me/dashboards/4414473e-b527-439d-b735-28e9d365058c?ctid=43eaa772-f7b9-49c0-a310-6db2e0414f42
+https://app.powerbi.com/groups/me/dashboards/4414473e-b527-439d-b735-28e9d365058c?ctid=43eaa772-f7b9-49c0-a310-6db2e0414f42 <br /> 
+9. The covid19_Israel has added chart and data, re Israels lab testing i.e. symptoms
