@@ -206,8 +206,7 @@ print('Coefficients/Weights: ', linreg.coef_)
 isr_sym_ratio = pd.DataFrame(list(zip(labels, abs(linreg.coef_))),columns=['symptom', 'weight'])
 print(isr_sym_ratio.sort_values(by = 'weight', ascending = False))
 #plt.close
-chart_info = 'COVID Symptom Predictors\n' + 'Number Test Conducted ' + str(max(isr_sym._id))+ ',' + ' Last Updated ' + str(max(isr_sym.test_date))
-isr_sym_ratio.sort_values(by = 'weight', ascending = False).head(5).plot(kind='bar', x = 'symptom', y = 'weight', title = chart_info, color=['r', 'g', 'b', 'y', 'm', 'k', 'c'] ) 
-#x_axis.set_visible(False)
+chart_info = 'Top Symptoms, COVID Coefficient Weights, Source: gov.co.il\n' + 'Number Test Conducted ' + str(max(isr_sym._id))+ ',' + ' Last Updated ' + str(max(isr_sym.test_date))
+isr_sym_ratio.sort_values(by = 'weight', ascending = False).head(5).plot(kind='bar', x = 'symptom', y = 'weight', title = chart_info, color=['r', 'g', 'b', 'y', 'm', 'k', 'c'], legend = None)
 plt.xticks(rotation=45, ha="right")   #fpr x-axis legend labels to fit properly
 plt.tight_layout() #fpr x-axis legend labels to fit properly
