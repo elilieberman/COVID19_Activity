@@ -68,13 +68,11 @@ cov2['recv_rate'] = cov2['cum_Recv']/cov2['cum_Conf']
 cov2['pct_conf'] = cov2['cum_Conf']/cov2['pop']
 cov2['pct_recv'] = cov2['cum_Recv']/cov2['pop']
 cov2['pct_conf'] = cov2['cum_Conf']/cov2['pop']
-#cov2[['ConfChg','RecvChg']] = cov2.sort_values(['Country_Region','Last_Update'], ascending= [True,True]).groupby(level=0)[['cum_Conf','cum_Recv' ]].pct_change()
 cov2[['ConfChg','RecvChg']] = cov2.groupby(level=0)[['cum_Conf','cum_Recv' ]].pct_change()
 world_pop = cov2['pop'].sum() # missing data from country name mismatches at merge
 conf_rt = cov2['Rolling_Rank'].mean()
 conf_rt
 cov2.tail(14)
-#cov2.to_csv(r'C:\EliPersonal\Python\Datasets\Doit\covid_agg.csv', encoding = 'utf-8') # save data set with features to csv
 #%% Ordered by day (NOT by country/day)
 cov_all =  cov2.reset_index(level=0, drop=True)
 cov_all.sort_values('Last_Update', ascending= True, inplace=True)
@@ -92,10 +90,10 @@ agg_data.to_csv(r'C:\EliPersonal\Python\Datasets\Doit\agg_data.csv', encoding = 
 #%% Plot Country Trend
 import seaborn as sns
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+
 country_selected = 'Italy'  #used for graphs and ARIMA
-plot_title_a = 'COVID Activity, ' + country_selected
-      
+
+plot_title_a = 'COVID Activity and Trend, ' + country_selected
 plot_data = cov2.reset_index()    
 plot_data.sort_values(['Country/Region','Last_Update'], ascending= [True,True], inplace=True)
 plot_data.head()
@@ -132,7 +130,7 @@ plt.savefig(r'C:\EliPersonal\Python\Datasets\Doit\COVID_Trend_Italy.png')
 sns.set()
 #%% Plot POPULATION Relative Changes
 plt.close()
-plot_title_b = 'Covid Confirmed v. Recovering, ' + country_selected
+plot_title_b = 'Covid Confirmed v. Recovering, Population Data, ' + country_selected
 sns.set(style="white", rc={"lines.linewidth": 3})
 fig, ax1 = plt.subplots(figsize=(8,4))
 ax2 = ax1.twinx()
