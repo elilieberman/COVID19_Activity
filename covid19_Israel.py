@@ -99,8 +99,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 country_selected = 'Israel'  #used for graphs and ARIMA
-plot_title_a = 'COVID Trend using Rolling Mean, ' + country_selected 
-
 plot_data = cov2.reset_index()    
 plot_data.sort_values(['Country/Region','Last_Update'], ascending= [True,True], inplace=True)
 plot_data.head()
@@ -108,6 +106,7 @@ plot_data = plot_data.loc[:,['Country/Region','Last_Update','log_confirmed', '5_
 plots = plot_data[plot_data['Country/Region'] == country_selected]
 
 plt.close()
+plot_title_a = 'COVID Trend using Rolling Mean, ' + country_selected 
 sns.set(style="white", rc={"lines.linewidth": 3})
 fig, ax1 = plt.subplots(figsize=(8,4))
 sns.lineplot(x='Last_Update', 
