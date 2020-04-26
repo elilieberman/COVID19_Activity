@@ -93,7 +93,7 @@ import matplotlib.pyplot as plt
 
 country_selected = 'Italy'  #used for graphs and ARIMA
 
-plot_title_a = 'COVID Activity and Trend, ' + country_selected
+plot_title_a = 'COVID Trend, using Log and Rolling Mean' + country_selected
 plot_data = cov2.reset_index()    
 plot_data.sort_values(['Country/Region','Last_Update'], ascending= [True,True], inplace=True)
 plot_data.head()
@@ -130,7 +130,7 @@ plt.savefig(r'C:\EliPersonal\Python\Datasets\Doit\COVID_Trend_Italy.png')
 sns.set()
 #%% Plot POPULATION Relative Changes
 plt.close()
-plot_title_b = 'Covid Confirmed v. Recovering, Population Data, ' + country_selected
+plot_title_b = 'COVID Confirmed v. Recovering, Population Data ' + country_selected
 sns.set(style="white", rc={"lines.linewidth": 3})
 fig, ax1 = plt.subplots(figsize=(8,4))
 ax2 = ax1.twinx()
