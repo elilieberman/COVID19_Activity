@@ -99,8 +99,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 country_selected = 'Israel'  #used for graphs and ARIMA
-plot_title_a = 'COVID Trend, using Log and Rolling Mean' + country_selected
-      
+plot_title_a = 'COVID Trend, using Log and Rolling Mean, ' + country_selected +'\n(Log is Blue line, Rolling Mean is Green line)'
+
 plot_data = cov2.reset_index()    
 plot_data.sort_values(['Country/Region','Last_Update'], ascending= [True,True], inplace=True)
 plot_data.head()
@@ -137,7 +137,7 @@ plt.savefig(r'C:\EliPersonal\Python\Datasets\Doit\COVID_Trend_Italy.png')
 sns.set()
 #%% Plot POPULATION Relative Changes
 #plt.close()
-plot_title_b = 'Covid Confirmed v. Recovering, Population Data ' + country_selected
+plot_title_b = 'COVID Confirmed v. Recovering, Population Data ' + country_selected +'\n(Confirmed is red line, Recovered is green line)'
 sns.set(style="white", rc={"lines.linewidth": 3})
 fig, ax1 = plt.subplots(figsize=(8,4))
 ax2 = ax1.twinx()
@@ -145,7 +145,7 @@ sns.lineplot(x='Last_Update',
             y='pct_conf', 
             data = plots,
             linewidth = 1,
-            color='b',
+            color='r',
             marker='o',
             linestyle = ':',
             ax=ax1)
@@ -203,8 +203,9 @@ print(isr_sym_ratio.sort_values(by = 'weight', ascending = False))
 #plt.close
 chart_info = 'Top Symptoms, COVID Coefficient Weights, Source: gov.co.il\n' + 'Number Test Conducted ' + str(max(isr_sym._id))+ ',' + ' Data Updated ' + str(max(isr_sym.test_date))
 isr_sym_ratio.sort_values(by = 'weight', ascending = False).head(5).plot(kind='bar', x = 'symptom', y = 'weight', title = chart_info, color=['r', 'g', 'b', 'y', 'm', 'k', 'c'], legend = None)
-plt.xticks(rotation=45, ha="right")   #fpr x-axis legend labels to fit properly
-plt.tight_layout() #fpr x-axis legend labels to fit properly
+plt.ylabel('Weight/Importance', fontsize=10)
+plt.xticks(rotation=45, ha="right")   #for x-axis legend labels to fit properly
+plt.tight_layout() #for x-axis legend labels to fit properly
 #%% ARIMA TIME SERIES ANALYSIS (TSA) Forecasting
 from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
@@ -259,14 +260,14 @@ sns.lineplot(x='Last_Update',
             data = arima_df.reset_index()[-45:],
             label = 'recorded', 
             linewidth = 2,
-            color='b',
+            color='r',
             linestyle = ':',
             ax=ax1)
 sns.lineplot(x='index', 
              y=0,
              data = forecast.reset_index(),
              label = 'predicted', 
-             color='g', 
+             color='m', 
              marker = 'x',
              linewidth = 3,
              linestyle = '-',
