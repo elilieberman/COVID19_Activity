@@ -8,9 +8,8 @@
 7. To modify the graphs for another Country update the variable "country_selected" (line 96) <br />
 * The "COVID Trend" plot shows the Trend of confirmed cases, plots trendlines using the "log" and "rolling mean" (visible flattening of the curve) <br />
 * The "COVID Confirmed and Recovery", displays these trends "a percentage of the population"<br />
-8. The agg_data csv is the sourcefile for related PowerBI dashboard, check it out...
 https://app.powerbi.com/groups/me/dashboards/4414473e-b527-439d-b735-28e9d365058c?ctid=43eaa772-f7b9-49c0-a310-6db2e0414f42 <br /> 
-9. The covid19_Israel has added an SYMPTOM chart and demonstative Prediction data (as a on-practioner), data source is israel.co.il <br />
+8. The covid19_Israel has added an SYMPTOM chart and demonstative Prediction data (as a on-practioner), data source is israel.co.il <br />
 * The "COVID Trend" plot shows the Trend of confirmed cases, plots trendlines using the "log" and "rolling mean" (visible flattening of the curve) <br />
 * The "COVID Confirmed and Recovery", displays these trends "a percentage of the population"<br />
 * The Bar plot, shows which symptoms are seem most indiciative of COVID<br />
