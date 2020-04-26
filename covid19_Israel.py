@@ -177,12 +177,12 @@ isr_sym.replace(to_replace=['חיובי', 'שלילי'], value=[0, 1], inplace =
 isr_sym.replace(to_replace=['אחר','נקבה', 'זכר'], value=[0, 1,1], inplace = True) #fix categorical values
 isr_sym['test_date'] = pd.to_datetime(isr_sym['test_date'], errors = 'coerce').dt.date
 isr_sym['male'] = isr_sym.apply(lambda x: 1 if x.gender == "M" else 0, axis = 1) #convert string values to numeric
-isr_sym['age60'] = isr_sym['age_60_and_above'].eq('Yes').astype(int) #convert string values to numeric
-isr_sym[['age_60_and_above','age60']].tail(20)
+isr_sym['over60'] = isr_sym['age_60_and_above'].eq('Yes').astype(int) #convert string values to numeric
+isr_sym[['age_60_and_above','over60']].tail(20)
 isr_sym.info()
 
 #%%  Linear Regression Model
-labels = ['cough', 'fever', 'sore_throat','shortness_of_breath', 'head_ache', 'male', 'age60'] #'test_date', 'test_indication',
+labels = ['cough', 'fever', 'sore_throat','shortness_of_breath', 'head_ache', 'male', 'over60'] #'test_date', 'test_indication',
 X = isr_sym[labels]
 X = X.apply(pd.to_numeric, errors='coerce')
 y = isr_sym.corona_result
@@ -206,6 +206,8 @@ print('Coefficients/Weights: ', linreg.coef_)
 isr_sym_ratio = pd.DataFrame(list(zip(labels, abs(linreg.coef_))),columns=['symptom', 'weight'])
 print(isr_sym_ratio.sort_values(by = 'weight', ascending = False))
 #plt.close
-isr_sym_ratio.sort_values(by = 'weight', ascending = False).head(5).plot(kind='bar', x = 'symptom', y = 'weight', title = 'COVID Symptom Predictors', color=['r', 'g', 'b', 'y', 'm', 'k', 'c'], label = '')
+chart_info = 'COVID Symptom Predictors\n' + 'Number Test Conducted ' + str(max(isr_sym._id))+ ',' + ' Last Updated ' + str(max(isr_sym.test_date))
+isr_sym_ratio.sort_values(by = 'weight', ascending = False).head(5).plot(kind='bar', x = 'symptom', y = 'weight', title = chart_info, color=['r', 'g', 'b', 'y', 'm', 'k', 'c'] ) 
+#x_axis.set_visible(False)
 plt.xticks(rotation=45, ha="right")   #fpr x-axis legend labels to fit properly
 plt.tight_layout() #fpr x-axis legend labels to fit properly
