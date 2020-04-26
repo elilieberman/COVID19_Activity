@@ -7,7 +7,6 @@ Created on Mon Mar 16 16:06:13 2020
 import numpy as np
 import pandas as pd
 import os
-import sys # for utilities that check memory issues
 os.environ['PROJ_LIB'] = r'C:\EliPersonal\Python\Datasets\ieee' # fixes cant find "epsg" and PROJ_LIB for BASEMAP
 pd.set_option('display.max_columns', None)
 pd.option_context('display.max_colwidth', None)
@@ -85,7 +84,7 @@ cov2.tail(14)
 cov_all =  cov2.reset_index(level=0, drop=True)
 cov_all.sort_values('Last_Update', ascending= True, inplace=True)
 cov_all['worldwide_cum_confirmed'] = cov_all['confirmed'].cumsum()
-print ('Total Confirmed Covid Cases Worldwide: ',cov_all['confirmed'].cumsum().max())
+#print ('Total Confirmed Covid Cases Worldwide: ',cov_all['confirmed'].cumsum().max())
 #%% Save Master data to csv for PowerBI, and RANKINGS
 agg_data = cov2.reset_index()    
 agg_data.sort_values(['Country/Region','Last_Update'], ascending= [True,True], inplace=True)
@@ -100,7 +99,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 country_selected = 'Israel'  #used for graphs and ARIMA
-plot_title_a = 'COVID Activity, ' + country_selected
+plot_title_a = 'COVID Trend, using Log and Rolling Mean' + country_selected
       
 plot_data = cov2.reset_index()    
 plot_data.sort_values(['Country/Region','Last_Update'], ascending= [True,True], inplace=True)
@@ -138,7 +137,7 @@ plt.savefig(r'C:\EliPersonal\Python\Datasets\Doit\COVID_Trend_Italy.png')
 sns.set()
 #%% Plot POPULATION Relative Changes
 #plt.close()
-plot_title_b = 'Covid Confirmed v. Recovering, ' + country_selected
+plot_title_b = 'Covid Confirmed v. Recovering, Population Data ' + country_selected
 sns.set(style="white", rc={"lines.linewidth": 3})
 fig, ax1 = plt.subplots(figsize=(8,4))
 ax2 = ax1.twinx()
@@ -159,14 +158,11 @@ sns.lineplot(x='Last_Update',
              linestyle = '-',
              ax=ax2)
 ax1.tick_params('both', labelrotation=90)
-#ax1.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
-#ax2.yaxis.set_major_locator(ticker.MultipleLocator(5))
 ax1.xaxis.grid(True)
 ax1.yaxis.grid(True)
 ax1.set_xlabel('')
 plt.title(plot_title_b)
 plt.show()
-plt.savefig(r'C:\EliPersonal\Python\Datasets\Doit\COVID_PerCapita_Activity_Italy.png')
 sns.set()
 #%% Read Israel SYMPTOM data using JSON api, convert RESULTS dictionary to dataframe
 import pandas as pd
@@ -202,11 +198,84 @@ linreg.fit(X_train, y_train)
 # print the intercept and coefficients
 print('Intercept: ',linreg.intercept_)
 print('Coefficients/Weights: ', linreg.coef_)
-#list(zip(labels, linreg.coef_))
 isr_sym_ratio = pd.DataFrame(list(zip(labels, abs(linreg.coef_))),columns=['symptom', 'weight'])
 print(isr_sym_ratio.sort_values(by = 'weight', ascending = False))
 #plt.close
-chart_info = 'Top Symptoms, COVID Coefficient Weights, Source: gov.co.il\n' + 'Number Test Conducted ' + str(max(isr_sym._id))+ ',' + ' Last Updated ' + str(max(isr_sym.test_date))
+chart_info = 'Top Symptoms, COVID Coefficient Weights, Source: gov.co.il\n' + 'Number Test Conducted ' + str(max(isr_sym._id))+ ',' + ' Data Updated ' + str(max(isr_sym.test_date))
 isr_sym_ratio.sort_values(by = 'weight', ascending = False).head(5).plot(kind='bar', x = 'symptom', y = 'weight', title = chart_info, color=['r', 'g', 'b', 'y', 'm', 'k', 'c'], legend = None)
 plt.xticks(rotation=45, ha="right")   #fpr x-axis legend labels to fit properly
 plt.tight_layout() #fpr x-axis legend labels to fit properly
+#%% ARIMA TIME SERIES ANALYSIS (TSA) Forecasting
+from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from statsmodels.tsa.stattools import adfuller
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+#aggregated dailyvalues, of a SINGLE country, by day
+arima_df = agg_data[agg_data['Country/Region'] == country_selected].loc[:,['Last_Update', 'confirmed']] 
+# Resampling of daily reporting
+arima_df.set_index('Last_Update', inplace = True)
+arima_df.tail().T
+arima_df.info()
+arima_df = arima_df.resample('1D').apply(np.sum)
+
+#Checking trend and autocorrelation
+def initial_plots(time_series, num_lag):
+    #Original timeseries plot
+    plt.figure(1)
+    plt.plot(time_series)
+    plt.title('Original data across time')
+    plt.figure(2)
+    plot_acf(time_series, lags = num_lag)
+    plt.title('Autocorrelation plot')
+    plot_pacf(time_series, lags = num_lag)
+    plt.title('Partial autocorrelation plot')
+    plt.show()
+    
+#Augmented Dickey-Fuller test for stationarity
+#checking p-value
+# adfuller(arima_df.confirmed.values)  #all values, p-value, lag, number obs, 
+print('p-value: {}'.format(adfuller(arima_df)[1]))
+print('Lag-value: {}'.format(adfuller(arima_df)[2]))
+print('Number of Observations: {}'.format(adfuller(arima_df)[3]))
+lag = adfuller(arima_df)[2]
+
+#storing differenced series
+diff_series = arima_df.diff(periods=1)
+# fit model using Lag 4 from previous analysis, Diff 1 because daily values, Rolling window 3 given the prevailing window for this data
+model = ARIMA(arima_df, order=(lag,1,3))
+model_fit = model.fit(disp=0)
+print(model_fit.summary())
+# Forecast for the next 10 days, beginning 45 days back
+#plt.close()
+plot_title_arima_pred = 'ARIMA Predicted, Confirmed Cases, ' + country_selected +'\n(looking back 45 days, looking forward 10 days, last confirmed case:' + str(max(isr_sym.test_date)) +')'
+forecast = model_fit.predict(start = len(arima_df),end = (len(arima_df)-1) + 10, typ = 'levels')
+# Plot the forecast values 
+sns.set(style="white", rc={"lines.linewidth": 3})
+fig, ax1 = plt.subplots(figsize=(8,4))
+sns.lineplot(x='Last_Update',
+            y= 'confirmed', 
+            data = arima_df.reset_index()[-45:],
+            label = 'recorded', 
+            linewidth = 2,
+            color='b',
+            linestyle = ':',
+            ax=ax1)
+sns.lineplot(x='index', 
+             y=0,
+             data = forecast.reset_index(),
+             label = 'predicted', 
+             color='g', 
+             marker = 'x',
+             linewidth = 3,
+             linestyle = '-',
+             ax=ax1)
+ax1.tick_params('both', labelrotation=45)
+ax1.xaxis.grid(True)
+ax1.yaxis.grid(True)
+ax1.set_xlabel('')
+ax1.set_ylabel('Confirmed Cases and Predicted')
+plt.title(plot_title_arima_pred)
+plt.show()
+sns.set()
