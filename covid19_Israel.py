@@ -105,7 +105,6 @@ plot_data.head()
 plot_data = plot_data.loc[:,['Country/Region','Last_Update','log_confirmed', '5_rollmean_confirmed','pct_conf', 'pct_recv']]
 plots = plot_data[plot_data['Country/Region'] == country_selected]
 
-plt.close()
 plot_title_a = 'COVID Trend using Rolling Mean, ' + country_selected 
 sns.set(style="white", rc={"lines.linewidth": 3})
 fig, ax1 = plt.subplots(figsize=(8,4))
@@ -113,7 +112,7 @@ sns.lineplot(x='Last_Update',
              y='5_rollmean_confirmed',
              data = plots,
              color='r',
-             marker='>',
+             marker='<',
              linewidth = 1,
              linestyle = '-',
              ax=ax1)
@@ -123,7 +122,6 @@ ax1.yaxis.grid(True)
 ax1.set_xlabel('')
 plt.title(plot_title_a)
 plt.show()
-plt.savefig(r'C:\EliPersonal\Python\Datasets\Doit\COVID_Trend_Italy.png')
 sns.set()
 #%% Plot data as a Percent of POPULATION
 #plt.close()
