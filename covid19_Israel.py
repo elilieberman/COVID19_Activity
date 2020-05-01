@@ -234,7 +234,7 @@ lag = adfuller(arima_df)[2]
 #storing differenced series
 diff_series = arima_df.diff(periods=1)
 # fit model using Lag 4 from previous analysis, Diff 1 because daily values, Rolling window 3 given the prevailing window for this data
-model = ARIMA(arima_df, order=(lag,1,3))
+model = ARIMA(arima_df, order=(lag,1,3)) #lag-1 versus lag, prevents SVD error
 model_fit = model.fit(disp=0)
 print(model_fit.summary())
 # Forecast for the next 10 days, beginning 45 days back
